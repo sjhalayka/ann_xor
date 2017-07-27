@@ -27,7 +27,6 @@ int main(void)
 	double error_rate = 0.0;
 	long unsigned int num_training_sessions = 0;
 
-	bool use_mse_error = false;
 
 	// train network until the error rate goes below the maximum error rate
 	// or we reach the maximum number of training sessions (which could be considered as "giving up")
@@ -40,7 +39,7 @@ int main(void)
 		NNet.FeedForward(inputs);
 		inputs.clear();
 		inputs.push_back(0.0);
-		error_rate = NNet.BackPropagate(inputs, use_mse_error);
+		error_rate = NNet.BackPropagate(inputs);
 
 		inputs.clear();
 		inputs.push_back(0.0);
@@ -48,7 +47,7 @@ int main(void)
 		NNet.FeedForward(inputs);
 		inputs.clear();
 		inputs.push_back(1.0);
-		error_rate += NNet.BackPropagate(inputs, use_mse_error);
+		error_rate += NNet.BackPropagate(inputs);
 
 		inputs.clear();
 		inputs.push_back(1.0);
@@ -56,7 +55,7 @@ int main(void)
 		NNet.FeedForward(inputs);
 		inputs.clear();
 		inputs.push_back(1.0);
-		error_rate += NNet.BackPropagate(inputs, use_mse_error);
+		error_rate += NNet.BackPropagate(inputs);
 
 		inputs.clear();
 		inputs.push_back(1.0);
@@ -64,7 +63,7 @@ int main(void)
 		NNet.FeedForward(inputs);
 		inputs.clear();
 		inputs.push_back(0.0);
-		error_rate += NNet.BackPropagate(inputs, use_mse_error);
+		error_rate += NNet.BackPropagate(inputs);
 
 		error_rate /= 4.0;
 		num_training_sessions++;

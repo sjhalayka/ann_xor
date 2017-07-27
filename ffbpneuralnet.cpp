@@ -148,7 +148,7 @@ size_t FFBPNeuralNet::GetMaximumOutputNeuron(void) const
 	return final_index;
 }
 
-double FFBPNeuralNet::BackPropagate(const vector<double> &src_desired_outputs, const bool &provide_mse_error_rate)
+double FFBPNeuralNet::BackPropagate(const vector<double> &src_desired_outputs)
 {
 	// generate output layer errors
 	vector<double> OutputLayerErrors(OutputLayer.size());
@@ -163,17 +163,9 @@ double FFBPNeuralNet::BackPropagate(const vector<double> &src_desired_outputs, c
 	// calculate error rate, either mean square error or plain arithmetic mean error
 	double error_rate = 0.0;
 
-	if(true == provide_mse_error_rate)
-	{
-		for(size_t i = 0; i < OutputLayer.size(); i++)
-			error_rate += (OutputLayer[i].GetValue() - src_desired_outputs[i]) * (OutputLayer[i].GetValue() - src_desired_outputs[i]); // square error
-	}
-	else
-	{
-		for(size_t i = 0; i < OutputLayer.size(); i++)
-			error_rate += abs(OutputLayer[i].GetValue() - src_desired_outputs[i]); // take absolute value of error
-	}
-
+    for(size_t i = 0; i < OutputLayer.size(); i++)
+        error_rate += (OutputLayer[i].GetValue() - src_desired_outputs[i]) * (OutputLayer[i].GetValue() - src_desired_outputs[i]); // squared error
+    
 	error_rate /= static_cast<double>(OutputLayer.size()); // create mean
 
 
