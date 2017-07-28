@@ -12,7 +12,6 @@ using std::ifstream;
 using std::ios;
 
 #include <stdexcept>
-using std::bad_alloc;
 using std::out_of_range;
 using std::runtime_error;
 
@@ -26,10 +25,10 @@ FFBPNeuralNet::FFBPNeuralNet(const size_t &src_num_input_neurons, const vector<s
 {
 	// sanity checks
 	if(src_num_input_neurons == 0)
-        throw bad_alloc();//("Invalid number of input neurons.");
+        throw out_of_range("Invalid number of input neurons.");
 
 	if(src_num_hidden_layers_neurons.size() == 0)
-        throw bad_alloc();//("Invalid number of hidden layers.");
+        throw out_of_range("Invalid number of hidden layers.");
 
 	for(size_t i = 0; i < src_num_hidden_layers_neurons.size(); i++)
 	{
@@ -37,12 +36,12 @@ FFBPNeuralNet::FFBPNeuralNet(const size_t &src_num_input_neurons, const vector<s
 		{
 			ostringstream out;
 			out << "Invalid number of neurons in hidden layer #" << static_cast<long unsigned int>(i+1) << ".";
-            throw bad_alloc();//(out.str().c_str());
+            throw out_of_range(out.str().c_str());
 		}
 	}
 
 	if(src_num_output_neurons == 0)
-        throw bad_alloc();//("Invalid number of output neurons.");
+        throw out_of_range("Invalid number of output neurons.");
 
 
 	// create input "neurons"
@@ -71,8 +70,8 @@ FFBPNeuralNet::FFBPNeuralNet(const size_t &src_num_input_neurons, const vector<s
 	// default values of 1.0 mean that these coefficients
 	// do not affect any calculations made during the backpropagation process
 	// change them to something other than 1.0 to "enable" them
-	learning_rate = 1.0; // 0.25 might be a good value
-	momentum = 1.0; // 0.5 might be a good value
+    learning_rate = 1.0;    // 0.25 might be a good value
+    momentum = 1.0; // 0.5 might be a good value
 }
 
 FFBPNeuralNet::FFBPNeuralNet(const char *const src_filename)
@@ -160,12 +159,12 @@ double FFBPNeuralNet::BackPropagate(const vector<double> &src_desired_outputs)
 	}
 
 
-	// calculate error rate, either mean square error or plain arithmetic mean error
+	// calculate error rate, mean squared error
 	double error_rate = 0.0;
-
-    for(size_t i = 0; i < OutputLayer.size(); i++)
-        error_rate += (OutputLayer[i].GetValue() - src_desired_outputs[i]) * (OutputLayer[i].GetValue() - src_desired_outputs[i]); // squared error
     
+    for(size_t i = 0; i < OutputLayer.size(); i++)
+        error_rate += (OutputLayer[i].GetValue() - src_desired_outputs[i]) * (OutputLayer[i].GetValue() - src_desired_outputs[i]);
+
 	error_rate /= static_cast<double>(OutputLayer.size()); // create mean
 
 
@@ -302,7 +301,7 @@ size_t FFBPNeuralNet::GetNumInputLayerNeurons(void) const
 void FFBPNeuralNet::ResetNumInputLayerNeurons(const size_t &src_num_input_neurons)
 {
 	if(src_num_input_neurons == 0)
-        throw bad_alloc();//("Invalid number of input neurons.");
+        throw out_of_range("Invalid number of input neurons.");
 
 	InputLayer.resize(src_num_input_neurons, 0.0);
 
@@ -355,7 +354,7 @@ void FFBPNeuralNet::RemoveHiddenLayer(const size_t &index)
 		throw out_of_range("Invalid hidden layer index.");
 
 	if(HiddenLayers.size() == 1)
-        throw bad_alloc();//("Invalid number of hidden layers.");
+        throw out_of_range("Invalid number of hidden layers.");
 
 	if(index == 0)
 		ResetNumHiddenLayerNeurons(1, InputLayer.size());
@@ -442,7 +441,7 @@ size_t FFBPNeuralNet::GetNumOutputLayerNeurons(void) const
 void FFBPNeuralNet::ResetNumOutputLayerNeurons(const size_t &src_num_output_neurons)
 {
 	if(src_num_output_neurons == 0)
-        throw bad_alloc();//("Invalid number of output neurons.");
+        throw out_of_range("Invalid number of output neurons.");
 
 	size_t temp_output_size = OutputLayer.size();
 
